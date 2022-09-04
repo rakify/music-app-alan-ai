@@ -16,6 +16,6 @@
     "node-youtube-music": "^0.3.5",
     "nodemon": "^2.0.19",
     "youtube-sr": "^4.0.6",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.11.1"
   }
 }

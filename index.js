@@ -13,34 +13,35 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.get("/", async (req, res) => {
-  try {
-    const trending = await Youtube.trending({ limit: 10 });
-    const filterData = trending.map(async (ls) => {
-      const info = await ytdl.getInfo(
-        `https://www.youtube.com/watch?v=${ls.id}`
-      );
-      const format = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
+// app.get("/", async (req, res) => {
+//   try {
+//     const trending = await Youtube.trending({ limit: 10 });
+//     const filterData = trending.map(async (ls) => {
+//       const info = await ytdl.getInfo(
+//         `https://www.youtube.com/watch?v=${ls.id}`
+//       );
+//       const format = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
 
-      const thumbnailUrl = info.videoDetails.thumbnails;
-      return {
-        id: ls.id,
-        title: ls.title,
-        thumbnailUrl: thumbnailUrl[thumbnailUrl.length - 1].url,
-        duration: ls.duration,
-        musicUrl: format.url,
-      };
-    });
+//       const thumbnailUrl = info.videoDetails.thumbnails;
+//       return {
+//         id: ls.id,
+//         title: ls.title,
+//         thumbnailUrl: thumbnailUrl[thumbnailUrl.length - 1].url,
+//         duration: ls.duration,
+//         musicUrl: format.url,
+//       };
+//     });
 
-    var finalData = await Promise.all(filterData);
+//     var finalData = await Promise.all(filterData);
 
-    finalData = finalData.slice(0, 10);
-    //console.log(finalData)
-    res.status(200).json({ data: finalData });
-  } catch (err) {
-    console.log(err);
-  }
-});
+//     finalData = finalData.slice(0, 10);
+//     //console.log(finalData)
+//     res.status(200).json({ data: finalData });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
 app.post("/search", async (req, res) => {
   try {
     const musics = await Youtube.search(req.body.title, {
@@ -52,6 +53,7 @@ app.post("/search", async (req, res) => {
       const info = await ytdl.getInfo(
         `https://www.youtube.com/watch?v=${ls.id}`
       );
+
       const format = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
 
       const thumbnailUrl = info.videoDetails.thumbnails;
@@ -67,7 +69,7 @@ app.post("/search", async (req, res) => {
     var finalData = await Promise.all(filterData);
 
     finalData = finalData.slice(0, 10);
-    //console.log(finalData)
+    console.log(finalData);
     res.status(200).json({ data: finalData });
   } catch (err) {
     console.log(err);
