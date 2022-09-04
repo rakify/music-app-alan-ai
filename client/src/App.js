@@ -18,8 +18,9 @@ export default function App() {
   const [songIndex, setSongIndex] = useState(0);
   const [allSongDataList, setAllSongDataList] = useState([]);
   const [isSongPlaying, setIsSongPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  console.log(allSongDataList)
+  console.log(allSongDataList);
   const [playerInstance, setPlayerInstance] = useState(null);
 
   const setCardDataFromAlanBtn = async (songNumber) => {
@@ -43,10 +44,14 @@ export default function App() {
   useEffect(() => {
     const fetchDataFromServer = async (songName) => {
       try {
+        setLoading(true);
         alanBtnRef.btnInstance.playText("Wait Let's Play");
+        alanBtnRef.btnInstance.deactivate();
+
         const response = await axios.post("/search", { title: songName });
 
         if (response.status === 200) {
+          setLoading(false);
           setAllSongDataList(response.data.data);
         } else {
           alanBtnRef.btnInstance.playText("Sorry Try Other Song");
@@ -102,6 +107,7 @@ export default function App() {
           </div>
         </>
       )}
+      {loading && <p>Please wait...</p>}
     </div>
   );
 }
