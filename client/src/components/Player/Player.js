@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-jinke-music-player";
-import alanbtn from "@alan-ai/alan-sdk-web";
 
 // import css
 import "react-jinke-music-player/assets/index.css";
 
-export default function Player({ playerSongData }) {
+export default function Player({ playerSongData, alanBtnRef }) {
+  const [error, setError] = useState(false);
   const customDownloader = () => {
     const link = document.createElement("a");
     link.href = playerSongData.musicUrl;
@@ -15,8 +15,15 @@ export default function Player({ playerSongData }) {
     link.click();
   };
 
+  useEffect(() => {
+    error &&
+      alanBtnRef.btnInstance.playText("Something Went Wrong Try Other") &&
+      alanBtnRef.btnInstance.activate();
+    setError(false);
+  }, [error, alanBtnRef]);
+
   return (
-    <div>
+    <>
       <ReactPlayer
         audioLists={[
           {
@@ -28,11 +35,14 @@ export default function Player({ playerSongData }) {
         ]}
         customDownloader={customDownloader}
         remove={true}
-        onAudioAbort={() => console.log("Something Want Wrong Try Other")}
-        onAudioError={() => console.log("Something Want Wrong Try Other")}
-        clearPriorAudioLists={true}
+        quietUpdate={true}
+        onAudioAbort={() => setError(true)}
+        onAudioError={() => setError(true)}
+        clearPriorAudioLists={false}
         glassBg={true}
+        mode={"full"}
+        drag={false}
       />
-    </div>
+    </>
   );
 }

@@ -2,8 +2,6 @@ const express = require("express");
 const Youtube = require("youtube-sr").default;
 const ytdl = require("ytdl-core");
 const cors = require("cors");
-const ytMusic = require("node-youtube-music").default;
-const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -14,9 +12,10 @@ app.use(express.json());
 
 app.post("/search", async (req, res) => {
   try {
-    const musics = await Youtube.search(req.body.title, {
+    const musics = await Youtube.search(req.body.title+"audio", {
       type: "video",
-      limit: 3,
+      limit: 5,
+      safeSearch: true,
     });
 
     const filterData = musics.map(async (ls) => {
@@ -37,9 +36,6 @@ app.post("/search", async (req, res) => {
     });
 
     var finalData = await Promise.all(filterData);
-
-    finalData = finalData.slice(0, 3);
-    console.log(finalData);
     res.status(200).json({ data: finalData });
   } catch (err) {
     console.log(err);

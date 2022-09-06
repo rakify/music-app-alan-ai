@@ -21,7 +21,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   console.log(allSongDataList);
-  const [playerInstance, setPlayerInstance] = useState(null);
 
   const setCardDataFromAlanBtn = async (songNumber) => {
     try {
@@ -46,7 +45,6 @@ export default function App() {
       try {
         setLoading(true);
         alanBtnRef.btnInstance.playText("Wait Let's Play");
-        alanBtnRef.btnInstance.deactivate();
 
         const response = await axios.post("/search", { title: songName });
 
@@ -64,6 +62,9 @@ export default function App() {
 
     alanBtnRef.btnInstance = alanBtn({
       key: alanKey,
+      bottom: "30%",
+      right: "50px",
+      zIndex: 10,
       onCommand: ({ command, songName, songNumber }) => {
         console.log("command = ", command);
         if (command === "play") {
@@ -80,8 +81,9 @@ export default function App() {
         } else if (command === "change") {
           setIsSongPlaying(false);
           setSongIndex(null);
-        } else if (command === "download") {
-          window.open(`${allSongDataList[songIndex - 1]?.musicUrl}`, "_blank");
+        } else if (command === "pause") {
+          setIsSongPlaying(false);
+          setSongIndex(null);
         }
       },
     });
@@ -90,24 +92,46 @@ export default function App() {
   return (
     <div className="container-fluid p-0 m-0">
       {/* title */}
-      <h1 className="title mt-3">Music Player AI</h1>
+      <a href="/" style={{ textDecoration: "none" }}>
+        <h1 className="title mt-3">Music Player AI</h1>
+        <hr />
+      </a>
 
       {allSongDataList.length > 0 ? (
         <SongList
           allSongDataList={allSongDataList}
           songIndex={songIndex}
           isSongPlaying={isSongPlaying}
-          setPlayerInstance={playerInstance}
+          alanBtnRef={alanBtnRef}
         />
-      ) : (
+      ) : !loading ? (
         <>
-          <div className="mb-5 custom-model">
-            <h3>Give Command Like</h3>
-            <h6> Play Justin Bieber Songs</h6>
+          <h2>Welcome To Voice Controlled Music App</h2>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div className="custom-model">
+              <h3>Give Command Like</h3>
+              <h6> Play Justin Bieber Songs</h6>
+              <h6> Play Bollywood Songs etc</h6>
+            </div>
           </div>
         </>
+      ) : (
+        loading && (
+          <>
+            <h2>Fetching Song Data</h2>
+            <div class="lds-ripple">
+              <div>Wait</div>
+              <div>Please</div>
+            </div>
+          </>
+        )
       )}
-      {loading && <p>Please wait...</p>}
     </div>
   );
 }

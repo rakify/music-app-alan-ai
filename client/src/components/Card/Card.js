@@ -4,9 +4,9 @@ import Player from "../Player/Player";
 // import css
 import "./Card.css";
 
-export default function Card({ cardData }) {
+export default function Card({ cardData, alanBtnRef }) {
   return (
-    <div className="p-0 m-0 mt-5">
+    <div className="p-0 m-0 mt-5" style={{ flex: 1 }}>
       <div className="custom-card  container">
         <img
           src={cardData.thumbnailUrl}
@@ -19,7 +19,7 @@ export default function Card({ cardData }) {
         </div>
       </div>
 
-      <Player playerSongData={cardData} />
+      <Player playerSongData={cardData} alanBtnRef={alanBtnRef} />
     </div>
   );
 }
