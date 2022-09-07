@@ -8,5 +8,5 @@ This is an AI project. Its a voice controlled music app thanks to Alan AI and Yo
 
 ###### Features
 
-Can play, pause, change, download, stop playing songs also can create playlist and play them one by one.
+Can search, play, pause, change, download, stop playing songs also can create a playlist and play them one by one, all by using voice command.
 
